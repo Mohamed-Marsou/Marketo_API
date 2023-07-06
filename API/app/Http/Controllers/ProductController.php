@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class ProductController extends Controller
@@ -57,25 +58,40 @@ class ProductController extends Controller
         }
     }
 
-    public function fetchByCategory( $categoryId): JsonResponse
-    {
-        try {
-            $category = Category::find($categoryId);
-            // Retrieve the latest 16 products for the specified category with pagination
-            $products = Product::where('category_id', $categoryId)
-            ->latest('id')
-            ->paginate(16);
-            return response()->json(
-                [$products, $category]
-                , 200);
-        } catch (\Exception $e) {
-            // Handle the exception
-            return response()->json([
-                'message' => 'An error occurred in ProductController.fetchByCategory',
-                'error' => $e->getMessage()
-            ], 500);
-        }
+public function fetchByCategory($categoryId): JsonResponse
+{
+    try {
+        $category = Category::find($categoryId);
+        // Retrieve products for the specified category
+        $products = Product::where('category_id', $categoryId)
+            ->latest('id')->get();
+        return response()->json([
+            'products' => $products,
+            'category' => $category
+        ], 200);
+    } catch (\Exception $e) {
+        // Handle the exception
+        return response()->json([
+            'message' => 'An error occurred in ProductController.fetchByCategory',
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
+
+public function search(Request $request)
+{
+    $searchTerm = $request->input('search');
+    $category = $request->input('category');
+
+    $query = Product::where('category_id', $category)
+        ->where(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($searchTerm) . '%');
+
+    $products = $query->paginate(8);
+
+    return response()->json([
+        'products' => $products,
+    ]);
+}
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([

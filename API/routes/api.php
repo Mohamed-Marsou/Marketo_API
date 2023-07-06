@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductController;
 
 require __DIR__.'/Api/Product/product.php';
 require __DIR__.'/Api/Subscriber/subscriber.php';
+require __DIR__.'/Api/User/user.php';
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) { 
     return $request->user();
