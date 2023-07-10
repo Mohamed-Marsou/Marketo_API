@@ -100,7 +100,8 @@ public function search(Request $request)
             'description' => 'required|string',
             'rating' => 'required|numeric',
             'inStock' => 'required|integer',
-            'coverImage' => 'required|string',
+            'coverImage' => 'required',
+            'stock' =>'required|integer'
         ]);
 
         $product = Product::create($data);

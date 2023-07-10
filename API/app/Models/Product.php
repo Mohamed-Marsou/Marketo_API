@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Cart;
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,9 +11,13 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'price', 'description', 'rating', 'inStock', 'imagePaths', 'category_id'];
+    protected $fillable = ['name', 'price', 'description', 'rating', 'inStock', 'imagePaths', 'category_id','inStock'];
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+    public function cart()
+    {
+        return $this->belongsTo(Cart::class);
     }
 }
