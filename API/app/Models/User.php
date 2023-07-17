@@ -3,7 +3,9 @@
 namespace App\Models;
 
 use App\Models\Cart;
+use App\Models\Order;
 use App\Models\Wishlist;
+use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Model;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -13,7 +15,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
-    use HasApiTokens, Notifiable ;
+    use HasApiTokens, Notifiable;
 
     // ...
 
@@ -59,6 +61,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasOne(Wishlist::class);
     }
+  
     /**
      * The attributes that should be cast.
      *
@@ -68,4 +71,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
 }

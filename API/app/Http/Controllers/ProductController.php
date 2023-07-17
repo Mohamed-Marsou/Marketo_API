@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 
 class ProductController extends Controller
 {
@@ -78,20 +80,20 @@ public function fetchByCategory($categoryId): JsonResponse
     }
 }
 
-public function search(Request $request)
-{
-    $searchTerm = $request->input('search');
-    $category = $request->input('category');
+    public function search(Request $request)
+    {
+        $searchTerm = $request->input('search');
+        $category = $request->input('category');
 
-    $query = Product::where('category_id', $category)
-        ->where(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($searchTerm) . '%');
+        $query = Product::where('category_id', $category)
+            ->where(DB::raw('LOWER(name)'), 'LIKE', '%' . strtolower($searchTerm) . '%');
 
-    $products = $query->paginate(8);
+        $products = $query->paginate(8);
 
-    return response()->json([
-        'products' => $products,
-    ]);
-}
+        return response()->json([
+            'products' => $products,
+        ]);
+    }
     public function store(Request $request): JsonResponse
     {
         $data = $request->validate([
@@ -130,6 +132,43 @@ public function search(Request $request)
 
         $product->update($data);
         return response()->json($product);
+    }
+
+    public function clearUserCart($id)
+    {
+        try {
+            // Find the user based on the provided ID
+            $user = User::findOrFail($id);
+
+            // Clear the user's cart
+            $user->cart()->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'User cart cleared successfully.',
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+    
+    public function getUserOrderDetails($order_id)
+    {
+        $order = Order::with('products')->where('transaction_id', $order_id)->first();
+    
+        if (!$order) {
+            return response()->json(['error' => 'Order not found'], 404);
+        }
+    
+        // Check if the order has associated products
+        if ($order->products->isEmpty()) {
+            return response()->json(['error' => 'No products found for this order'], 404);
+        }
+    
+        return response()->json($order, 200);
     }
 
     public function destroy(Product $product): JsonResponse

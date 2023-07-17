@@ -1,15 +1,15 @@
 <?php
 
-use App\Models\Wishlist;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+
+//? Validating user jwt token 
+Route::post('/validateToken', [UserController::class, 'validateToken'])->name('user.validateToken');
 
 // getting user cart items 
 Route::get('/user/cart/{id}', [UserController::class, 'getCartItems'])->name('user.getCartItems');
 //  getting user wishlist items 
 Route::get('/user/wishlist/{id}', [UserController::class, 'getWishlistItems'])->name('user.getWishlistItems');
-
-
 
 Route::get('/user/{id}', [UserController::class, 'show'])->name('user.show');
 

@@ -44,6 +44,21 @@ class UserController extends Controller
             'token' => $token,
         ], 200);
     }
+    public function validateToken(Request $request)
+    {
+        $token = $request->input('token');
+
+        try {
+            // Validate the token using the JWT_SECRET
+            $decodedToken = JWTAuth::setToken($token)->getPayload();
+
+            // Token is valid
+            return response()->json(['valid' => true]);
+        } catch (\Exception $e) {
+            // An error occurred or token is invalid
+            return response()->json(['valid' => false]);
+        }
+    }
     /**
      * Store a newly created user .
      */
@@ -69,7 +84,7 @@ class UserController extends Controller
         return response()->json([
             'message' => 'Registration successful',
             'user' => $user,
-        ], 201);
+        ], 200);
     }
 
     /**
