@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->decimal('amount', 8, 2);
             $table->string('transaction_id');
+            $table->bigInteger('wp_order_id');
             $table->timestamps();
         });
     }

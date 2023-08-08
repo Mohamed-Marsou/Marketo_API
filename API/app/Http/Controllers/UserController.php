@@ -20,7 +20,22 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        try {
+            $perPage = 7; // Adjust the number of users per page
+            $users = User::withCount('orders')
+                ->orderBy('id', 'desc') // Sort users by ID in descending order (latest first)
+                ->paginate($perPage);
+    
+            return response()->json([
+                'users' => $users
+            ], 200);
+        } catch (\Exception $e) {
+            // Handle the exception
+            return response()->json([
+                'message' => 'An error occurred while retrieving users with order counts',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**

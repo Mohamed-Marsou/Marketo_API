@@ -20,11 +20,13 @@ class StripeController extends Controller
         $paymentMethodId = $request->input('payment_method_id');
         $amount = $request->input('amount');
         $userId = $request->input('userId');
+        $wpOrderID = $request->input('wp_order_id');
 
         // Convert the amount to cents
         $amountInCents = intval($amount * 100);
         // Set your Stripe API secret key
-        $stripeSecretKey = env('STRIPE_SECRET');
+        //// --- $stripeSecretKey = env('STRIPE_SECRET');
+        $stripeSecretKey ="sk_test_51NSKUaLLOB7wszA9BjRZLrYyVBVRnDIFOpTnEcCbAdo9pt2DEm6hzmK0pPPLtkIfN75oUzB3YDRiS985lPbmuVGD0025mkTJ4G";
         Stripe::setApiKey($stripeSecretKey);
 
         // Create a new payment intent
@@ -51,8 +53,9 @@ class StripeController extends Controller
             //Create a new order
             $order = new Order();
             $order->user_id = $userId;
-            $order->amount = $amount; // Replace $amount with the actual 
+            $order->amount = $amount; 
             $order->transaction_id = $paymentMethodId;
+            $order->wp_order_id = $wpOrderID;
             // Save the order
             $order->save();
 
@@ -88,7 +91,7 @@ class StripeController extends Controller
             $orderProduct->save();
     
             // Decrease the quantity of the product in the product table
-            $product = Product::findOrFail($productId);
+            $product = Product::find($productId);
             $product->inStock -= $quantity;
             $product->save();
         }

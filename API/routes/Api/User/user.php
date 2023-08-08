@@ -3,8 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
-//? Validating user jwt token 
-Route::post('/validateToken', [UserController::class, 'validateToken'])->name('user.validateToken');
+
+// get users with transaction Count  
+Route::get('/user/all', [UserController::class, 'index'])->name('user.index');
+
+//? Validating user jwt token with try limit (35 request in 1 min)
+Route::post('/validateToken', [UserController::class, 'validateToken'])->middleware('throttle:60,1')->name('user.validateToken');
 
 // getting user cart items 
 Route::get('/user/cart/{id}', [UserController::class, 'getCartItems'])->name('user.getCartItems');

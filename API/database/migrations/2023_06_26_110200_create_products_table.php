@@ -15,12 +15,22 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('price', 8, 2);
-            $table->text('description');
-            $table->float('rating');
-            $table->integer('inStock');
-            $table->json('imagePaths')->nullable();
+            $table->decimal('regular_price', 8, 2)->nullable();
+            $table->decimal('sale_price', 8, 2)->nullable();
+            $table->integer('inStock')->nullable();
+            $table->string('slug');
+            $table->string('status')->nullable();
+            $table->decimal('average_rating',3,2)->nullable();;
             $table->json('specification')->nullable();
-            $table->unsignedBigInteger('category_id');
+            $table->json('weight')->nullable();
+            $table->json('dimensions')->nullable();
+            $table->json('imagePaths');
+            $table->text('short_description');
+            $table->text('description');
+
+            // Add the category_id column as an unsigned big integer
+            $table->unsignedBigInteger('category_id')->nullable();
+
             $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
         });

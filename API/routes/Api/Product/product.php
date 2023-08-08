@@ -30,3 +30,8 @@ Route::delete('/cart/clear/{id}', [ProductController::class, 'clearUserCart'])->
 
 
 Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+
+//TODO DLETEEEEEEEEEE 
+// // - Get Products from WOO DB -
+Route::get('/woo/products', [ProductController::class, 'syncAllProductsFromWooCommerce'])->name('products.syncAllProductsFromWooCommerce');
+
