@@ -63,26 +63,6 @@ class ProductController extends Controller
         }
     }
 
-    public function fetchByCategory($categoryId): JsonResponse
-    {
-        try {
-            $category = Category::find($categoryId);
-            // Retrieve products for the specified category
-            $products = Product::where('category_id', $categoryId)
-                ->latest('id')->get();
-            return response()->json([
-                'products' => $products,
-                'category' => $category
-            ], 200);
-        } catch (\Exception $e) {
-            // Handle the exception
-            return response()->json([
-                'message' => 'An error occurred in ProductController.fetchByCategory',
-                'error' => $e->getMessage()
-            ], 500);
-        }
-    }
-
     public function search(Request $request)
     {
         $searchTerm = $request->input('search');

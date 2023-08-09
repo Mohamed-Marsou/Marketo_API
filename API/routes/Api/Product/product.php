@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
@@ -9,7 +10,7 @@ Route::get('/products/rating', [ProductController::class, 'hotProducts'])->name(
 //// Fetch newset Products
 Route::get('/products/new', [ProductController::class, 'newProducts'])->name('products.newProducts');
 //// Fetch by category
-Route::get('/products/{category}', [ProductController::class, 'fetchByCategory'])->name('products.fetchByCategory');
+Route::get('/products/{category}', [Categorycontroller::class, 'fetchByCategory'])->name('products.fetchByCategory');
 
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 
@@ -31,7 +32,9 @@ Route::delete('/cart/clear/{id}', [ProductController::class, 'clearUserCart'])->
 
 Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
 
-//TODO DLETEEEEEEEEEE 
-// // - Get Products from WOO DB -
+// // - Get Products from WOO DB -> Laravel DB
 Route::get('/woo/products', [ProductController::class, 'syncAllProductsFromWooCommerce'])->name('products.syncAllProductsFromWooCommerce');
+
+// // UPDATE CATEGORY
+Route::post('/category/update', [CategoryController::class, 'updateCategory'])->name('products.updateCategory');
 

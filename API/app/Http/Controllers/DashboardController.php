@@ -123,4 +123,18 @@ class DashboardController extends Controller
             return response()->json(['error' => 'An error occurred.' . $e], 500);
         }
     }
+
+
+    public function ProductSearch(Request $request)
+    {
+        $searchQuery = $request->input('q');
+        
+        $product = Product::with('category')
+            ->where(function($query) use ($searchQuery) {
+                $query->whereRaw('lower(name) like ?', ['%' . strtolower($searchQuery) . '%']);
+            })
+            ->select('id', 'name', 'inStock', 'category_id')
+            ->first();
+        return response()->json($product);
+    }
 }

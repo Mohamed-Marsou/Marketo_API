@@ -21,6 +21,12 @@ class StripeController extends Controller
         $amount = $request->input('amount');
         $userId = $request->input('userId');
         $wpOrderID = $request->input('wp_order_id');
+        
+        
+        $userName = $request->input('costumerName');
+        $userEmil = $request->input('costumerEmail');
+        $userAdress = $request->input('costumerAddress');
+        $userCity = $request->input('costumerCity');
 
         // Convert the amount to cents
         $amountInCents = intval($amount * 100);
@@ -43,8 +49,10 @@ class StripeController extends Controller
             if ($userId === null) {
                 // Create a new user
                 $user = new User();
-                $user->name = 'Guest User';
-                $user->email = "GUEST_USER" . $paymentMethodId . "@GUEST_USER.com";
+                $user->name =  $userName;
+                $user->email = $userEmil;
+                $user->address = $userAdress;
+                $user->city = $userCity;
                 $user->password = Hash::make('password');
                 $user->save();
                 // Assign the user's ID to $userId
